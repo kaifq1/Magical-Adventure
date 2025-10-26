@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Magical Kingdom Adventure</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="icon" type="image/png" href="MusologinSVG.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --orange: #ff7518;
+      --dark-orange: #c45a11;
+      --bg: #121212;
+      --card-bg: #1e1e1e;
+      --text: #e0e0e0;
+      --muted: #888888;
+      --glow-color: rgba(255, 117, 24, 0.6);
+    }
+    @keyframes pulse-glow {
+      0% { box-shadow: 0 0 15px 5px var(--glow-color); }
+      50% { box-shadow: 0 0 25px 10px var(--glow-color); }
+      100% { box-shadow: 0 0 15px 5px var(--glow-color); }
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Lato', system-ui, sans-serif;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      background-image: radial-gradient(circle, #2a2a2a 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 28px auto;
+      padding: 28px;
+      border: 4px solid var(--orange);
+      border-radius: 34px;
+      display: grid;
+      grid-template-columns: 240px 1fr 260px;
+      gap: 24px;
+      align-items: start;
+      background-color: var(--card-bg);
+      animation: pulse-glow 5s infinite ease-in-out;
+      position: relative; /* Added for logo positioning */
+    }
+    
+    /* --- LOGO CSS ADDED --- */
+    .logo { 
+      position: absolute; 
+      left: 28px; 
+      top: 18px; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: flex-start; 
+      gap: 4px; 
+    }
+    .logo img { 
+      height: 110px; 
+      width: auto; 
+      filter: invert(1) drop-shadow(0 0 5px var(--orange)); 
+    }
+    /* --- END LOGO CSS --- */
+
+    .header { 
+      grid-column: 1/-1; 
+      display: flex; 
+      justify-content: center; 
+      margin-bottom: 6px; 
+    }
+    .title { font-family: 'Creepster', cursive; font-size: 56px; color: var(--orange); }
+
+    .sidebar { border-right: 2px solid rgba(255,255,255,0.1); padding: 18px 14px; height: 720px; overflow-y: auto; }
+    .sidebar h3 { color: var(--orange); font-family: 'Creepster'; font-size: 28px; }
+    .journey-list { height: 600px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 12px; overflow-y: auto; }
+    .journey-summary li { margin-bottom: 8px; line-height: 1.5; } /* Added line-height */
+
+    .main { padding: 4px 18px; }
+    .step-title { font-size: 32px; color: var(--orange); margin: 8px 0 18px; font-weight: 700; }
+    .story-box { 
+      background: rgba(0,0,0,0.3); 
+      padding: 26px; 
+      border-radius: 20px; 
+      border: 2px dashed var(--orange); 
+      min-height: 120px; 
+      font-size: 18px; /* Added */
+      line-height: 1.6; /* Added */
+    }
+    .cursor { display: inline-block; width: 10px; height: 1.2em; background-color: var(--orange); animation: blink 1s infinite; margin-left: 4px; vertical-align: middle; }
+    @keyframes blink { 0%,100%{opacity:1;}50%{opacity:0;} }
+
+    .choices { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 20px; }
+    .choice {
+      background: var(--card-bg);
+      border: 4px solid var(--orange);
+      border-radius: 18px;
+      padding: 18px 20px;
+      min-width: 200px;
+      flex: 1 1 220px; /* Added flex-grow */
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 6px 0 rgba(0, 0, 0, 0.3); /* Added */
+    }
+    .choice:hover { 
+      background: var(--orange); 
+      color: var(--bg); 
+      transform: translateY(-4px) scale(1.02); 
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* Added */
+    }
+    .choice b { font-weight: 700; } /* Changed from .choice .name */
+    .choice .desc { 
+      font-size: 14px; 
+      color: var(--muted); 
+      transition: color 0.2s ease; /* Added */
+    }
+    .choice:hover .desc { color: var(--bg); } /* Added */
+
+
+    /* --- VIDEO CSS UPDATED FOR RESPONSIVENESS --- */
+    #video-container { 
+      margin-top: 26px; 
+      border-radius: 18px; 
+      border: 2px solid rgba(255,117,24,0.5); 
+      background: #000; 
+      min-height: 220px;
+      /* Added for aspect ratio */
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 */
+      height: 0;
+      overflow: hidden;
+    }
+    #story-video-iframe {
+      /* Added for aspect ratio */
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      border-radius: 12px;
+    }
+    /* --- END VIDEO CSS --- */
+    
+    .utility { display: flex; flex-direction: column; align-items: center; gap: 20px; padding-top: 18px; } /* Added padding */
+    .restart { background: var(--orange); color: white; padding: 12px 24px; border-radius: 34px; border: none; font-weight: 700; cursor: pointer; font-size: 16px; transition: background-color 0.2s ease; } /* Added transition */
+    .restart:hover { background: var(--dark-orange); }
+
+    .muted { color: var(--muted); }
+    .hidden { display: none !important; }
+
+    @media (max-width: 1024px) {
+      .container { grid-template-columns: 1fr; padding: 16px; }
+      .sidebar { display: none; }
+      .logo { position: static; align-items: center; margin-bottom: 10px; } /* Adjust logo for mobile */
+      .header { margin-bottom: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <div class="logo" aria-hidden="true">
+      <img src="MusologinSVG.svg" alt="Dragon logo" />
+    </div>
+    
+    <div class="header"><div class="title">Magical Kingdom Adventure</div></div>
+
+    <aside class="sidebar">
+      <h3>Your Story So Far</h3>
+      <div class="journey-list" id="journeyList"></div>
+    </aside>
+
+    <main class="main">
+      <h2 id="step-title" class="step-title"></h2>
+      <div id="story-box" class="story-box"></div>
+      <div id="options" class="choices"></div>
+      <div id="video-container" class="hidden"></div>
+    </main>
+
+    <aside class="utility">
+      <button id="restartBtn" class="restart">Restart Adventure</button>
+    </aside>
+  </div>
+
+  <script>
+    // --- COMPLETE STORY DATA (RESTORED FROM ORIGINAL) ---
+    const storyData = {
+      1: {
+        title: "Step 1: The Hidden Kingdom",
+        prompt: "You discover a glowing portal in a forest clearing... Who do you choose?",
+        options: [
+          { text: "Flame the Dragon: A small, fiery dragon...", next: 2, summary: "To begin your quest to break the curse, you chose the fiery <b>Flame the Dragon</b> as your companion." },
+          { text: "Luna the Unicorn: A gentle unicorn...", next: 3, summary: "To begin your quest to break the curse, you chose the gentle <b>Luna the Unicorn</b> as your guide." },
+          { text: "Breeze the Fairy: A quick fairy...", next: 4, summary: "To begin your quest to break the curse, you chose the nimble <b>Breeze the Fairy</b> to aid you." }
+        ]
+      },
+      2: { title: "Step 2: The Enchanted Valley", prompt: "With Flame... a magical barrier blocks your path. How do you proceed?", options: [ { text: "Use Flame’s sparks...", next: 5, summary: "Entering the Enchanted Valley, you used Flame's sparks to burn through a magical barrier." }, { text: "Search for a hidden path...", next: 6, summary: "Upon entering the Enchanted Valley, your keen eye helped you spot a hidden path around a magical barrier." }, { text: "Sing a magic song...", next: 7, summary: "In the Enchanted Valley, you and Flame recalled an ancient song to magically dispel the blocking mist." } ] },
+      3: { title: "Step 2: The Crystal Cavern", prompt: "Luna leads you to a dark cavern... a maze blocks your way. What do you do?", options: [ { text: "Follow Luna’s glow...", next: 8, summary: "Inside a dark cavern, you trusted <b>Luna's glowing horn</b> to guide you safely through a crystal maze." }, { text: "Climb the cavern walls...", next: 9, summary: "To bypass a crystal maze in the dark cavern, you bravely <b>scaled the cavern walls</b> to a higher ledge." }, { text: "Search for a map...", next: 10, summary: "Within the dark cavern, you cleverly discovered a <b>crystal map</b> to navigate the confusing maze." } ] },
+      4: { title: "Step 2: The Sky Bridge", prompt: "Breeze leads you to a rickety bridge... How do you cross?", options: [{ text: "Use Breeze’s magic...", next: 11, summary: "Reaching a rickety Sky Bridge, you asked Breeze to cast a spell, steadying it for a safe crossing." },{ text: "Fly with Breeze...", next: 12, summary: "At the dangerous Sky Bridge, you held on tight and flew across the gap with Breeze." },{ text: "Repair the bridge...", next: 13, summary: "Finding the Sky Bridge too dangerous, you gathered materials to repair it, ensuring a safe passage." }] },
+      5: { title: "Step 3: The Crystal Clue", prompt: "Flame’s sparks dissolve the barrier, revealing a riddle... Where do you look?", options: [{ text: "A glowing cave...", next: 14, summary: "The riddle led you to a glowing cave where light and shadow met." },{ text: "A shadowed grove...", next: 15, summary: "Following the riddle's clue, you ventured into a shadowed grove." },{ text: "A mirrored lake...", next: 16, summary: "You deduced the riddle pointed to a mirrored lake, reflecting both sky and stone." }] },
+      6: { title: "Step 3: The Hidden Path", prompt: "You find a hidden path... a spirit guards the Crystal. What do you do?", options: [{ text: "Call the spirit...", next: 14, summary: "At the end of a hidden path, you chose to bravely call out to the guardian spirit." },{ text: "Offer a gift...", next: 15, summary: "To appease the guardian spirit of the Crystal, you decided to leave a thoughtful offering." },{ text: "Sneak past...", next: 16, summary: "Hoping to avoid confrontation, you attempted to sneak quietly past the guardian spirit." }] },
+      7: { title: "Step 3: The Song’s Power", prompt: "Flame’s song clears the mist, revealing a pedestal... Where do you go?", options: [{ text: "A starry hill...", next: 14, summary: "The ancient carving pointed you toward a beautiful, starry hill." },{ text: "A misty valley...", next: 15, summary: "An ancient pedestal guided you deeper into a valley shrouded in mist." },{ text: "A crystal tower...", next: 16, summary: "The magical pedestal revealed that your destination was a distant, glowing crystal tower." }] },
+      8: { title: "Step 3: The Maze’s Secret", prompt: "Luna’s glow reveals a clue... Where do you search?", options: [{ text: "The Clock Tower...", next: 17, summary: "The clue 'one who guards time' led you to seek out the old Clock Tower." },{ text: "The Eternal Spring...", next: 18, summary: "The clue about guarding time pointed you towards a magical Eternal Spring." },{ text: "The Timekeeper’s Lair...", next: 19, summary: "Following a mysterious clue, you searched for the hidden lair of a Timekeeper." }] },
+      9: { title: "Step 3: The Cavern Heights", prompt: "Climbing the walls, you find an inscription... Where do you go?", options: [{ text: "The Clock Tower...", next: 17, summary: "An ancient inscription about time led you to the great Clock Tower." },{ text: "The Eternal Spring...", next: 18, summary: "An inscription about 'time standing still' guided you to an Eternal Spring." },{ text: "The Timekeeper’s Lair...", next: 19, summary: "Following an ancient inscription, you sought the Timekeeper's Lair." }] },
+      10: { title: "Step 3: The Crystal Map", prompt: "You find a crystal map... Where do you head?", options: [{ text: "The Clock Tower...", next: 17, summary: "The crystal map showed the way to a tall Clock Tower." },{ text: "The Eternal Spring...", next: 18, summary: "The path on the crystal map led you to a hidden, Eternal Spring." },{ text: "The Timekeeper’s Lair...", next: 19, summary: "The crystal map revealed the secret location of the Timekeeper's Lair." }] },
+      11: { title: "Step 3: The Bridge’s Magic", prompt: "Breeze’s spell steadies the bridge, and you find a tablet... Where do you look?", options: [{ text: "The Clock Tower...", next: 20, summary: "A sky tablet’s clue about a time guardian sent you towards the Clock Tower." },{ text: "The Eternal Spring...", next: 21, summary: "A mysterious sky tablet pointed you to the legendary Eternal Spring." },{ text: "The Timekeeper’s Lair...", next: 22, summary: "The message on the sky tablet led you to search for the Timekeeper’s Lair." }] },
+      12: { title: "Step 3: The Sky Path", prompt: "Flying with Breeze, you land on a cloud with a message... Where do you go?", options: [{ text: "The Clock Tower...", next: 20, summary: "A message on a cloud guided you to the ancient Clock Tower." },{ text: "The Eternal Spring...", next: 21, summary: "A magical message in the clouds pointed the way to an Eternal Spring." },{ text: "The Timekeeper’s Lair...", next: 22, summary: "The cloud's message revealed your next stop: the Timekeeper's Lair." }] },
+      13: { title: "Step 3: The Repaired Bridge", prompt: "You repair the bridge and cross to find a stone... Where do you search?", options: [{ text: "The Clock Tower...", next: 20, summary: "A clue on a stone sent you in the direction of the town's Clock Tower." },{ text: "The Eternal Spring...", next: 21, summary: "A mysterious clue etched in stone guided you toward an Eternal Spring." },{ text: "The Timekeeper’s Lair...", next: 22, summary: "The clue you found guided you to the hidden Timekeeper’s Lair." }] },
+      14: { title: "Step 4: The Guardian’s Challenge", prompt: "A Shadow Guardian blocks the Star Crystal... What do you do?", options: [{ text: "Fight the Guardian...", next: 23, summary: "To prove your courage, you fought and defeated the Shadow Guardian." },{ text: "Solve a riddle...", next: 24, summary: "To prove your courage, you cleverly solved the Shadow Guardian's riddle." },{ text: "Show kindness...", next: 25, summary: "To prove your courage, you showed unexpected kindness to the Shadow Guardian, winning it over." }] },
+      15: { title: "Step 4: The Guardian’s Challenge", prompt: "A Shadow Guardian blocks the Star Crystal... What do you do?", options: [{ text: "Fight the Guardian...", next: 23, summary: "To prove your courage, you fought and defeated the Shadow Guardian." },{ text: "Solve a riddle...", next: 24, summary: "To prove your courage, you cleverly solved the Shadow Guardian's riddle." },{ text: "Show kindness...", next: 25, summary: "To prove your courage, you showed unexpected kindness to the Shadow Guardian, winning it over." }] },
+      16: { title: "Step 4: The Guardian’s Challenge", prompt: "A Shadow Guardian blocks the Star Crystal... What do you do?", options: [{ text: "Fight the Guardian...", next: 23, summary: "To prove your courage, you fought and defeated the Shadow Guardian." },{ text: "Solve a riddle...", next: 24, summary: "To prove your courage, you cleverly solved the Shadow Guardian's riddle." },{ text: "Show kindness...", next: 25, summary: "To prove your courage, you showed unexpected kindness to the Shadow Guardian, winning it over." }] },
+      17: { title: "Step 4: The Guardian’s Trial", prompt: "A Time Guardian demands a test of wisdom... How do you respond?", options: [{ text: "Answer a puzzle...", next: 26, summary: "To prove your wisdom, you successfully solved the Time Guardian’s intricate puzzle." },{ text: "Use magic...", next: 27, summary: "To prove your wisdom, you used your companion's magic to outsmart the Time Guardian." },{ text: "Prove loyalty...", next: 28, summary: "To prove your wisdom, you showed your deep loyalty to the kingdom, impressing the Time Guardian." }] },
+      18: { title: "Step 4: The Guardian’s Trial", prompt: "A Time Guardian demands a test of wisdom... How do you respond?", options: [{ text: "Answer a puzzle...", next: 26, summary: "To prove your wisdom, you successfully solved the Time Guardian’s intricate puzzle." },{ text: "Use magic...", next: 27, summary: "To prove your wisdom, you used your companion's magic to outsmart the Time Guardian." },{ text: "Prove loyalty...", next: 28, summary: "To prove your wisdom, you showed your deep loyalty to the kingdom, impressing the Time Guardian." }] },
+      19: { title: "Step 4: The Guardian’s Trial", prompt: "A Time Guardian demands a test of wisdom... How do you respond?", options: [{ text: "Answer a puzzle...", next: 26, summary: "To prove your wisdom, you successfully solved the Time Guardian’s intricate puzzle." },{ text: "Use magic...", next: 27, summary: "To prove your wisdom, you used your companion's magic to outsmart the Time Guardian." },{ text: "Prove loyalty...", next: 28, summary: "To prove your wisdom, you showed your deep loyalty to the kingdom, impressing the Time Guardian." }] },
+      20: { title: "Step 4: The Guardian’s Test", prompt: "A Sky Guardian demands a test of bravery... What do you do?", options: [{ text: "Face the storm...", next: 29, summary: "To prove your bravery, you fearlessly faced a magical storm to reach the Crystal." },{ text: "Use cunning...", next: 30, summary: "To prove your bravery, you used your cunning to trick the Sky Guardian and get the Crystal." },{ text: "Seek help...", next: 31, summary: "To prove your bravery, you worked together with your companion to overcome the Sky Guardian." }] },
+      21: { title: "Step 4: The Guardian’s Test", prompt: "A Sky Guardian demands a test of bravery... What do you do?", options: [{ text: "Face the storm...", next: 29, summary: "To prove your bravery, you fearlessly faced a magical storm to reach the Crystal." },{ text: "Use cunning...", next: 30, summary: "To prove your bravery, you used your cunning to trick the Sky Guardian and get the Crystal." },{ text: "Seek help...", next: 31, summary: "To prove your bravery, you worked together with your companion to overcome the Sky Guardian." }] },
+      22: { title: "Step 4: The Guardian’s Test", prompt: "A Sky Guardian demands a test of bravery... What do you do?", options: [{ text: "Face the storm...", next: 29, summary: "To prove your bravery, you fearlessly faced a magical storm to reach the Crystal." },{ text: "Use cunning...", next: 30, summary: "To prove your bravery, you used your cunning to trick the Sky Guardian and get the Crystal." },{ text: "Seek help...", next: 31, summary: "To prove your bravery, you worked together with your companion to overcome the Sky Guardian." }] },
+
+      // --- ENDINGS (RESTORED PROMPTS) WITH YOUTUBE URLS ---
+      23:{title:"The Hero’s Triumph",prompt:"With unity and courage, you and your companion defeat the Shadow Guardian. The Star Crystal glows, the curse lifts, and your adventure ends in true glory.",options:[],videoUrl:"https://youtu.be/K4_qYS75u5o"},
+      24:{title:"The Riddle’s Reward",prompt:"With wit and insight, you solve the Guardian's riddle. It bows in respect, presenting the Star Crystal as the kingdom is freed. Your adventure concludes in brilliance.",options:[],videoUrl:"https://youtu.be/PchWLdEdvic"},
+      25:{title:"The Peaceful Victory",prompt:"Your gentle gesture softens the Guardian’s spirit. It hands over the Star Crystal, and the curse fades. Your story ends not with battle, but in harmonious victory.",options:[],videoUrl:"https://youtu.be/edOCJgZZnJU"},
+      26:{title:"The Puzzle Master",prompt:"With focus and intellect, you solve the Time Guardian's mysterious puzzle. The Star Crystal is yours, the curse shatters, and your adventure ends in legendary brilliance.",options:[],videoUrl:"https://youtu.be/WHUTv68GxbU"},
+      27:{title:"The Magic Wielder",prompt:"You call upon your companion’s powerful magic to overcome the Time Guardian. The Star Crystal appears, dispelling the curse as you are hailed as a legend.",options:[],videoUrl:"https://youtu.be/sjO5K_4GRF0"},
+      28:{title:"The Loyal Hero",prompt:"You prove your unwavering loyalty to the kingdom. Moved by your devotion, the Guardian offers the Star Crystal, and your quest ends with honor and gratitude.",options:[],videoUrl:"https://youtu.be/Haib7Kw62wA"},
+      29:{title:"The Storm Braver",prompt:"You brave the Sky Guardian's fierce magical tempest, seizing the Star Crystal from the heart of the storm. Your courageous feat ends in bold, fearless triumph.",options:[],videoUrl:"https://youtu.be/lC73Dcqmd7Y"},
+      30:{title:"The Clever Trickster",prompt:"With a sparkle of cunning, you outsmart the Sky Guardian. It yields the Star Crystal, and your tale concludes in legendary cleverness.",options:[],videoUrl:"https://youtu.be/323hfzNLoTM"},
+      31:{title:"The Team Victory",prompt:"You and your companion join forces to overcome the Sky Guardian. Together, you retrieve the Star Crystal, and your adventure ends in the celebration of unity.",options:[],videoUrl:"https://youtu.be/khWoyBMQa6s"}
+    };
+
+    // --- LOGIC ---
+    const titleEl=document.getElementById('step-title');
+    const storyEl=document.getElementById('story-box');
+    const optionsEl=document.getElementById('options');
+    const videoEl=document.getElementById('video-container');
+    const journeyEl=document.getElementById('journeyList');
+    const restart=document.getElementById('restartBtn');
+    let currentStep=1, choices=[], typeInterval, timeout;
+
+    function typeWriter(text, el){
+      clearInterval(typeInterval);
+      el.textContent='';
+      const cursor=document.createElement('span');cursor.className='cursor';el.appendChild(cursor);
+      let i=0; 
+      // Adjusted speed to be a bit faster
+      const speed = Math.max(10, 2000 / text.length);
+      
+      typeInterval=setInterval(()=>{
+        if(i<text.length){
+          el.insertBefore(document.createTextNode(text[i]),cursor);
+          i++;
+        }
+        else{
+          clearInterval(typeInterval);
+          // Use setTimeout to remove cursor, feels smoother
+          setTimeout(() => {
+            if (el.contains(cursor)) {
+              el.removeChild(cursor);
+            }
+          }, 300);
+        }
+      },speed);
+    }
+
+    function renderStep(id){
+      clearTimeout(timeout);
+      const step=storyData[id]; 
+      if(!step){
+        storyEl.textContent="The story ends.";
+        return;
+      }
+      
+      titleEl.textContent=step.title; 
+      typeWriter(step.prompt,storyEl);
+      optionsEl.innerHTML=''; 
+      videoEl.classList.add('hidden');
+      videoEl.innerHTML = ''; // Clear the iframe
+      
+      if(!step.options||!step.options.length){
+        // Calculate typing time
+        const typeTime = Math.max(10, 2000 / step.prompt.length) * step.prompt.length + 500;
+        timeout=setTimeout(()=>showVideo(step), typeTime);
+        return;
+      }
+      
+      step.options.forEach(o=>{
+        const c=document.createElement('div');
+        c.className='choice';
+        c.setAttribute('role', 'button'); // Accessibility
+        c.setAttribute('tabindex', '0'); // Accessibility
+        
+        const [name,...desc]=o.text.split(':');
+        // Handle no description
+        const descText = desc.join(':').trim();
+        c.innerHTML=`<div><b>${name}</b></div><div class="desc">${descText || '&nbsp;'}</div>`;
+        
+        c.onclick=()=>{
+          choices.push(o);
+          updateJourney();
+          renderStep(o.next);
+        };
+        // Accessibility: allow selection with Enter/Space
+        c.onkeydown = (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            c.onclick();
+          }
+        };
+        optionsEl.appendChild(c);
+      });
+    }
+
+    // --- UPDATED SHOWVIDEO FUNCTION ---
+    function showVideo(step){
+      // Convert youtu.be or watch?v= to the embed format
+      const embedUrl = step.videoUrl
+        .replace('youtu.be/', 'www.youtube.com/embed/')
+        .replace('watch?v=', 'embed/');
+      
+      // Add autoplay=1 and mute=1 (browsers block unmuted autoplay)
+// Extract video ID for loop parameter
+      const videoId = embedUrl.split('/embed/')[1].split('?')[0];
+
+      // Add autoplay=1, mute=0 (unmuted), loop=1, and playlist=VIDEO_ID
+      // !! See warning below !!
+      const finalUrl = embedUrl.includes('?') 
+        ? `${embedUrl}&autoplay=1&mute=0&loop=1&playlist=${videoId}` 
+        : `${embedUrl}?autoplay=1&mute=0&loop=1&playlist=${videoId}`;
+
+      videoEl.innerHTML = `<iframe 
+        id="story-video-iframe" 
+        src="${finalUrl}" 
+        frameborder="0" 
+        allow="autoplay; encrypted-media; picture-in-picture" 
+        allowfullscreen>
+      </iframe>`;
+      
+      videoEl.classList.remove('hidden');
+      optionsEl.innerHTML='';
+    }
+    // --- END UPDATED FUNCTION ---
+
+    function updateJourney(){
+      if(!choices.length){
+        journeyEl.innerHTML='<div class="muted">Your adventure will appear here...</div>';
+        return;
+      }
+      // Use the rich summary text
+      journeyEl.innerHTML='<ul class="journey-summary">'+choices.map(c=>`<li>${c.summary}</li>`).join('')+'</ul>';
+    }
+
+    restart.onclick=()=>{
+      choices=[];
+      updateJourney();
+      renderStep(1);
+    }
+
+    // Initial setup
+    updateJourney();
+    renderStep(1);
+  </script>
+</body>
+</html>
